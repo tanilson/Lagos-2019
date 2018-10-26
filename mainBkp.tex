@@ -1,0 +1,765 @@
+\documentclass[9pt]{entcs} \usepackage{entcsmacro}
+\usepackage{graphicx}
+\sloppy
+% The following is enclosed to allow easy detection of differences in
+% ascii coding.
+% Upper-case    A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+% Lower-case    a b c d e f g h i j k l m n o p q r s t u v w x y z
+% Digits        0 1 2 3 4 5 6 7 8 9
+% Exclamation   !           Double quote "          Hash (number) #
+% Dollar        $           Percent      %          Ampersand     &
+% Acute accent  '           Left paren   (          Right paren   )
+% Asterisk      *           Plus         +          Comma         ,
+% Minus         -           Point        .          Solidus       /
+% Colon         :           Semicolon    ;          Less than     <
+% Equals        =3D           Greater than >          Question mark ?
+% At            @           Left bracket [          Backslash     \
+% Right bracket ]           Circumflex   ^          Underscore    _
+% Grave accent  `           Left brace   {          Vertical bar  |
+% Right brace   }           Tilde        ~
+
+
+% A couple of exemplary definitions:
+\newtheorem{defi}{Definition}[section]
+\newtheorem{rema}{Remark}[section]
+\newtheorem{teo}{Theorem}[section]
+\newtheorem{lema}{Lemma}[section]
+\newtheorem{open}{Open}[section]
+\newtheorem{fac}{Fact}[section]
+
+
+\newcommand{\Nat}{{\mathbb N}}
+\newcommand{\Real}{{\mathbb R}}
+\def\lastname{Please list Your Lastname Here}
+\begin{document}
+\begin{frontmatter}
+  \title{Perfect Tessellable Graphs} \author{My
+    Name\thanksref{ALL}\thanksref{myemail}}
+  \address{My Department\\ My University\\
+    My City, My Country} \author{My Co-author\thanksref{coemail}}
+  \address{My Co-author's Department\\My Co-author's University\\
+    My Co-author's City, My Co-author's Country} \thanks[ALL]{Thanks
+    to everyone who should be thanked} \thanks[myemail]{Email:
+    \href{mailto:myuserid@mydept.myinst.myedu} {\texttt{\normalshape
+        myuserid@mydept.myinst.myedu}}} \thanks[coemail]{Email:
+    \href{mailto:couserid@codept.coinst.coedu} {\texttt{\normalshape
+        couserid@codept.coinst.coedu}}}
+
+\begin{abstract} 
+%REESCREVER O ABSTRACT QUANDO O ARTIGO ESTIVER PRONTO, QUE VAI SABER O QUE ESTÁ OU NÃO NO ARTIGO%
+  A tessellation of a graph is a partition of its vertices into vertex disjoint cliques. A tessellation cover of a graph is a set of tessellations that covers all of its edges, and the tessellation cover number is the size of the smallest tessellation cover. 
+  %This problem is close related to classical coloring problems in graphs. 
+  %(Mover para a introdução) In a recent work (LATIN 2018, LNCS Vol. 10807 pp. 1--13), we developed bounds, efficient algorithms and several hardnessesults on obtaining the tessellation cover number, motivated by their application to quantum walk models, in special, the evolution operator of the staggered model is obtained from a graph tessellation cover. 
+  In the present work, we define the perfect tessellable graphs, by the graphs whose tessellation cover numbers are equal to 
+  the size of
+  their maximum induced star.
+  %, which is aatural lower bound for such a parameter. 
+  We establish graph families whose tessellation cover number is far from their star lower bounds, we present relationship of tessellation cover number after operations on graphs, and we present hardness results to determine if a graph is perfect tesssellable.
+  
+\end{abstract}
+\begin{keyword}
+  Please list keywords from your paper here, separated by commas.
+\end{keyword}
+\end{frontmatter}
+
+\section{Introduction}\label{sec:intro}
+\label{sec:intro}
+%DEFINIÇÔES
+A \textit{tessellation} of a graph is a partition of its vertices into vertex disjoint cliques. 
+A \textit{tessellation cover} of a graph is a set of tessellations that covers all of its edges, and the \textit{tessellation cover number} of a graph $G$, noted as $T(G)$ is the size of a smallest tessellation cover of $G$. 
+If a graph $G$ has a tessellation cover of size $k$ we say that $G$ is $k$-tessellable.
+The \textsc{$t$-tessellability} problem receives a graph $G$ and an integer $t$ and as a question if $G$ is $t$-tessellable (i.e., if $T(G) \leq t$).
+Hereinafter, we disregard in our proofs the cliques of size one in the tessellations, as they do not interfere in the tessellation cover number of a graph.
+
+%\subsection{Motivation}
+%MOTIVAÇÂO
+The tessellation cover of a graph was proposed by Portugal et al.~\cite{PSFG16} in the study of the dynamics of staggered quantum walk model. In a quantum walk, the walker can be in more than one position simultaneously. In staggered quantum walk context, each tessellation is related with an evolutionary operator for this quantum walk.
+Fig.~\ref{fig:evolution2} depicts a graph with  $T(G)=3$.
+It also shows how a quantum walker can spread across the vertices of a graph, given a particular tessellation cover. Note that after each step the walker spreads across the cliques in the corresponding tessellation.
+
+\begin{figure}
+\centering
+     \includegraphics[scale=0.6]{lagos2019-1.pdf}
+     \caption{The spreading of a walker across a $3$-tessellable graph. Filled vertices correspond to the position of the walker. \label{fig:evolution2}}
+\end{figure}
+
+
+%problema em si
+\subsection{\textsc{Perfect Tessellable Recognition}}
+
+\begin{defi}
+$loc_{\alpha}(G)$ is the number of edges of the largest induced subgraph of $G$ which is a star graph.
+\end{defi}
+
+
+\begin{defi}
+\emph{A graph $G$ is \textit{perfect tessellable} when $T(G) = loc_{\alpha}(G)$.}
+\end{defi}
+
+\bigskip
+
+\begin{minipage}[c]{0.5\textwidth}
+\begin{center}
+		\begin{description}
+			\item[] \underline{\textsc{$t$-tessellability}}
+			\item[] \textbf{Instance:} Graph $G$.
+			\item[] \textbf{Question:} Does $T(G) \leq t$? 
+		\end{description}
+\end{center}
+\end{minipage}		
+\hfill
+\begin{minipage}[c]{0.5\linewidth}	  
+			\begin{center}
+		\begin{description}
+			\item[] \underline{\textsc{Perfect Tessellable Recognition} (\textsc{ptr})}
+			\item[] \textbf{Instance:} Graph $G$.
+			\item[] \textbf{Question:} Does $T(G) = loc_\alpha(G)$? 
+		\end{description}
+			\end{center}
+\end{minipage}
+
+\bigskip
+
+
+A graph is \textit{perfect tessellable} if its tessellation cover number is equal to  the number of edges of their maximum induced star, i.e., $T(G) = loc_\alpha(G)$.
+The \textsc{Perfect Tessellable Recognition} (\textsc{ptr}) problem has a graph $G$ as instance and as a question if $G$ is perfect tessellable.
+
+
+\begin{teo}
+\textsc{ptr} $\in \mathcal{NP}$.
+\label{teo:ptrnp}
+\end{teo}
+\begin{proof}
+ A certificate for \textsc{ptr} of a graph $G$ is a tessellation cover $\mathcal{T}$ of $G$ with $k$ tessellations and a set $S$ of $k+1$ vertices of $V(G)$ which is an induced star graph in $G$.
+  The tessellation cover $\mathcal{T}$ implies $T(G) \leq k$ and, by Lemma~\ref{LOCALPHALIMITEINFERIOR}, $S$ implies that $T(G) \geq k$.
+ On the other hand, $S$ implies that $loc_\alpha(G) \geq k$ and, by Lemma~\ref{LOCALPHALIMITEINFERIOR}, $\mathcal{T}$ implies that $loc_\alpha(G) \leq k$.
+  Abreu et al.~\cite{ArLatin} proved that \textsc{$t$-tessellability} is $\mathcal{NP}$.
+ So, we can verify if the given $k$ tessellations are a tessellation cover of $G$ in polynomial time.
+ Moreover, one can verify in polynomial time if a set of $k+1$ vertices is an induced star graph in the graph $G$.
+ \end{proof}
+
+
+
+In this work we introduce the perfect tessellable graphs.
+We study bounds of a tessellation cover of a graph $G$ using its complement graph $G^c$
+(Sections~\ref{sub:21}~and~\ref{sub:22}).
+We define a graph class for which $loc_\alpha(G) = 2$ but $T(G)$ can grow arbitrarily large (Section~\ref{sub:22}).
+Particularly, we use these bounds to show that \textsc{$t$-tessellability} is $\mathcal{NP}$-complete for graphs with a universal vertex: relating it to the decision version of the \textsc{maximum stable set} problem (Section~\ref{sub:23}); and relating it to \textsc{$k$-colorability} problem (Section~\ref{sub:24}).
+We also show the hardness to decide $T(G)$ for graphs with $T(G) \geq loc_\alpha(G) + c$, where $c = O(n^d)$ with a constant $d$.
+We relate \textsc{ptr} with the known previous results on the complexity of the
+\textsc{$t$-tessellability} problem (Section~\ref{sub:32}).
+We show a graph class for which $T(G)$ is fixed in a funcion of $|V(G)|$ and can be obtained in linear time, but decide if $G$ is perfect tessellable is $\mathcal{NP}$-complete (Section~\ref{sub:33}).
+Moreover, we establish hardness results on decide if $T(G) = 3$ for thorny graphs and prism graphs with $loc_{\alpha}(G)=3$, which is equivalent to decide if these graphs are perfect tessellable (Section~\ref{sub:34}).
+Finally, we show some operations on graphs which relate \textsc{ptr} with  \textsc{chromatic index} problem. (Section~\ref{sub:35}).
+
+
+\subsection{Preliminares}
+
+Throughout the paper we only consider undirected graphs without loops or multiple edges. 
+
+Let $G=(V, E)$ be a graph.
+The neighborhood $N(v)$ of a vertex $v \in V$ of $G$ is given by $N(v)=\{u\ |\ uv \in E(G)\}$.
+We denote as $\Delta(G)$ the size of a maximum neighborhood of a vertex of $G$. %size of the maximum number of edges incident to a vertex of $G$.
+We say that a graph is \textit{universal} if $\Delta(G) = |V(G)|-1$.
+A \textit{clique} of $G$ is a subset of $V$ with all possible edges between its vertices.
+A \textit{stable set} of $G$ is a subset of $V$ with no edge between any of its vertices.
+A \textit{matching} of $G$ is a subset of edges of $E$  without a common endpoint.
+A \textit{$k$-coloring} of $G$ is a partition of $V$ into $k$ stable sets.
+A \textit{$k$-clique cover} of $G$ is a partition of $V$ into $k$ cliques.
+A \textit{$k$-edge coloring} of $G$ is a partition of $E$ into $k$ matchings.
+
+Let $\alpha(G)$, $\omega(G)$, and $\mu(G)$ denote the size of the maximum stable set, the maximum clique, and the maximum matching of a graph $G$, respectively.
+Let $\chi(G)$ ($\chi'(G)$) denote the minimum $k$ for which $G$ admits a $k$-coloring ($k$-edge coloring) and $\theta(G)$ denote the minimum $k$ for which $G$ admits a $k$-clique cover.
+Note that $\theta(G) = \chi(G^c)$ and $\alpha(G) = \omega(G^c)$.
+
+The \textsc{$k$-colorability} (\textsc{$k$-edge colorability}) has a graph $G$ as instance and as a question if $G$ admits a $k$-coloring ($k$-edge coloring).
+The decision version of \textsc{maximum stable set} problem has a graph $G$ and an integer $k$ as instance and as a question if $\alpha(G) = k$.
+
+
+A \textit{line graph} $L(G)$ of a graph $G$ has the edges of $G$ as its vertices and there is an edge between two vertices of $L(G)$ if the related edges in $G$ share a vertex. %its respective edges endpoints in $G$ share a vertex.
+A \textit{clique graph} $K(G)$ of a graph $G$ has the maximal cliques of $G$ as its vertices and there is an edge between two vertices of $K(G)$ if its respective maximal cliques in $G$ share a vertex.
+
+
+The distance $dist_G(u, v)$ between two vertices $u$ and $v$ of a graph $G$ is given by the minimum number of edges one needs to reach $v$ from the vertex $u$.
+The square $G^2$ of a graph $G$ has $V(G^2) = V(G)$ and $E(G^2) = E(G) \cup \{uv\ |\ dist_G(u,v)=2\}$.
+The complement $G^c=(V^c, E^c)$ (or $\overline{G}$) of a graph $G=(V, E)$ has $V^c = V$ and $E^c = \{uv\ |\ u \in V, v \in V,$ and $uv \not\in E\}$.
+The Union $G \cup H$ of two graphs $G$ and $H$ has $V(G \cup H) = V(G) \cup V(H)$ and $E(G \cup H) = E(G) \cup E(H)$.
+The Union $G \land H$ of two graphs $G$ and $H$ has $V(G \cup H) = V(G) \cup V(H)$ and $E(G \cup H) = E(G) \cup E(H) \cup \{uv\ |\ u \in G$ and $v \in H\}$.
+An \textit{induced subgraph} $H=(V_H, E_H)$ of a graph $G=(V_G, E_G)$ has $V_H \subseteq V_G$ and $E_H=\{uv\ |\ u \in V(G), v \in v(G),$ and $uv \in E(G)\}$.
+We usually note $G[S]$ as the induced subgraph of $G$ by the set of vertices $S \subseteq V(G)$.
+The \textit{addition of a true twin vertex} on a graph $G$ is made by select a vertex $v$ of $G$, include a vertex $v'$ with the same neighborhood of $v$, and include the edge $vv'$ in $E(G)$.
+
+A graph $G=(V,E)$ is: \textbf{(i)} \textit{bipartite} if its vertices can be partition into two stable sets; \textbf{(ii)} \textit{split} if its vertices can be partition into a stable set and a clique; \textbf{(iii)} $(k, l)$-graph f its vertices can be partition into $k$ stable sets and $l$ cliques; \textbf{(iv)}\textit{star} if it is the join of an isolated vertex and a stable set; \textbf{(v)} \textit{cycle} if it has $V(G)=\{v_1,\ldots, v_{|V(G)|}\}$ and $E(G)=\{v_i v_{i+1}\ |\ 1\leq i\leq n-1\} \cup \{v_{n}v_1\}$; \textbf{(vi)} \textit{chordal} if it has no induced subgraph cycle of size four or more; \textbf{(vii)} \textit{dually chordal} if its clique graph is a chordal graph. 
+
+
+%RELATED WORKS
+\subsection{Related works}
+\label{sec:intropre}
+
+A tessellation cover of a graph was introduced by Portugal et al.~\cite{PSFG16} in 2016. 
+Among the results, they characterized the $2$-tessellable graphs as the graphs with a bipartite clique graph.
+%falar do grafo linha de multipartito só la embaixo quando precisar no 3.2
+
+Later, in 2018, Abreu et al.~\cite{ArLatin} verified the upper bounds $T(G) \leq \chi(K(G))$ and $T(G) \leq \chi'(G)$. 
+They also establish several hardness results of \textsc{$t$-tessellability} restricted to graph classes.
+It was shown that the problem is $\mathcal{NP}$-complete for: planar graphs with $\Delta \geq 6$ (when $t=3$); triangle-free graphs (when $t\geq 3$); $(2,1)$-chordal graphs (when $t \geq 4)$; $(1,2)$ graphs (when $t \geq 4$); biplanar graphs (when $t \geq 3$); and diamond-free graphs with diameter at most 5 (when $t=3$).
+Whereas the problem is in $\mathcal{P}$ for bipartite graphs; threshold graphs and; diamond-free $K$-perfect graphs.
+
+Continuing, in 2018, Portugal et al.~\cite{ArCNMAC} showed two characterizations: (i) If $L(G)$ is a line graph of a triangle-free graph $G$, then $L(G)$ is $3$-tessellable if and only if $\chi(K(L(G)) \leq 4$; (ii) A graph $G$ is diamond-free $3$-tessellable if and only if there is a $4$-coloring of $K(G)$ where there is a color class for which the neighborhood of each vertex in it is a stable set.
+They also showed that \textsc{$t$-tessellability} is $\mathcal{NP}$-complete for line graph of triangle-free graphs.
+
+Later, in 2018, Abreu et al.~\cite{ArLAWCG} proved that $t$-tessellability of quasi-threshold graphs ($\{P_4,C_4\}$-free graphs) is polynomially solvable.
+Moreover, they verified the following lemma:
+
+\begin{lema}(Abreu et al.~\cite{ArLAWCG})
+\label{lema:truetwin}
+If $G$ is a graph and $H$ is obtained from $G$ by the addition of true twin vertices, then $T(H) = T(G)$.
+\end{lema}
+
+
+
+\section{The tessellation cover number of a graph and its complement}\label{sec:preliminaries}
+
+\subsection{A tesselation in the complement graph}
+\label{sub:22}  
+
+An important concept used in this work is the link between the tessellations of a graph $G$ and its complement graph $G^c$.
+Since a tessellation of a graph $G$ is a partition of its vertices in cliques, the next fact follows.
+
+\begin{fac}
+\label{fact:one}
+A tessellation of a graph $G$ is a coloring of $G^c$, i.e., a partition of its vertices in stable sets.
+\end{fac}
+
+Just like \textsc{$k$-colorability} of a graph $G$ is directly related to \textsc{$k$-pic} of $G^c$, Fact~\ref{fact:one} allow us rewrite \textsc{$t$-tessellability} of a graph $G$ as \textsc{$t$-non edge cover by colorings ($t$-NECC)} related to $G^c$. The \textsc{$t$-NECC} problem has a graph $G^c$ as instance and it has as a question if it is possible to cover all non edges of $G^c$ by a set of $t$ colorings of $G^c$. Note that we are not worried about if these colorings are optimal or not, as the number of colors used in these colorings are related with the number of cliques on the respective tessellation on the complement graph. In Figure~\ref{fig:mycielski}, one may consider  the tessellations $T_1$, $T_2$, $T_3$, and $T_4$ of $G$ as four different colorings of $G^c$ which cover all the non edges of $G^c$.
+%usar a figura abaixo
+
+\begin{figure}
+\centering
+     \includegraphics[scale=0.43]{lagos20195.pdf}
+     \caption{Explicar Figura. \label{fig:mycielski}}
+\end{figure}
+
+Let $G$ be a graph with a tessellation cover $\mathcal{T}$ of size $t$.
+A slightly different concept  (but fundamental for our work) is consider the relation between the cliques of these $t$ tessellations which shares a same vertex $v$ of $G$ and the chromatic index of the local complement of the neighborhood of this vertex $\chi(G^c[N(v)])$.
+Note that these cliques cover all edges incidents to $v$ as we are dealing with a tessellation cover of $G$.
+Moreover, the edges incident to $v$ in a same tessellation imply that the other endpoint of these edges are a clique in $G$ and, therefore, they are an independent set in $G^c$. 
+These independent sets may overlap in some vertices, but these only means that these vertices belong to more than an independent set and they may chose which color class they want to be part of in the coloring of $G^c$ given by these independent sets. Figure~\ref{fig:mycielski} depicts that the edge $vb$ are part of both tessellations $T_2$ and $T_4$, so vertex $b$ can chose which color related to these tessellation he wants to receive in $G^c$.
+Therefore, a graph $G$ be $t$-tessellable implies that for any vertex $v$ of $G$, $\chi(G^c[N(v)]) \leq t$.
+As $loc_\alpha(G[v \cup N(v)]) = \omega(G^c[N(v)]$, we have $loc_\alpha(G[v \cup N(v)]) = \omega(G^c[N(v)] \leq \chi(G^c[N(v)]) \leq t$. 
+Hence, it follows the next two lemmas.
+
+\begin{lema}
+\label{lemachilocal}
+If $G$ is a $t$-tessellable graph, then $\max_{v \in V(G)}\{\chi(G^c[N(v)])\} \leq t$. Particularly, if $G \land \{v\}$ is a $t$-tessellable graph, then $\chi(G^c) \leq t$
+\end{lema}
+
+\begin{lema}
+\label{lemalocalocal}
+If $G$ is a $t$-tessellable graph, then $\max_{v \in V(G)}\{loc_\alpha(G[v \cup N(v)])\} \leq t$. Particularly, if $G \land \{v\}$ is a $t$-tessellable graph, then $loc_\alpha(G) \leq t$.
+\end{lema}
+
+%IPC IPC IPC
+%seria bom falar aqui que T(G) pode diferenciar o quanto quiser de localpha, que vai ser o mycielski, mas nao pode diferenciar muito de chi(G) pq se for mais de 2delta+1 fica igual e colocar exemplos que se diferenciam e problema em aberto achar alto
+
+
+
+%falar que pode usar grafo 3-col no complemento para forçar uma 3-tess do grafo mais univ, antigamente usavamos estrela para forçar, mas agora existem toda uma séria de grafos diferentes que podemos usar para fazer isso a força, pensar como escrever isso
+
+%adicionar figura aqui com:
+%1) o t-necc, 
+%2) os limites do bound locais (coloração e loc alpha junto)
+%3) bound com univ bate junto com mycielski (coloração loc alpha juntos)
+%da para juntar t-necc com o mycielski
+%acho que o local da para explicar tudo na mesma figura também
+%falar que a explicação para o u univ vale para qq vétice e sua vizinhança no sub induzido e a soma deles o max é limitante tb
+
+
+%aqui são 2 coisas diferentes
+%a tesselação como uma coloração e dar um problema equivalente cobrir por colorações
+%e embaixo a coloraçaõ do complemento local como limite inferior, diferente, deixar claro bound embaixo diferente desse de cima
+
+%Juntar Sessao 2.1 e 2.2
+
+%\subsection{Bounds}
+%\label{sub:22}
+%bounds com ou sem univ um é a soma local o outro é o certo
+%essenciais para esse artigo esses 4 bounds e o mycielsky exemplo
+
+Lower bound based on the local coloring of the complement
+Lower bound based on the maximum induced star subgraph
+
+Given Mycielsky graph $M_i$ and by adding universal vertex v, we have that:
+
+$T(\overline{M_i}\land v) \geq i$.
+
+$loc_\alpha(\overline{M_i}\land v) = 2$.
+
+\begin{teo}\label{teo:MycTess}
+Let $M_i$ be a Mycielsky graph and $\overline{M_i}$ its complement graph. Then $T(\overline{M_i}\land v) \geq i$.
+\end{teo}
+\begin{proof}
+Since every Mycielsky graph $M_i$ has $\chi(M_i) = i$, we know that the vertices of $M_i$ can be partitioned into $i$ stable sets. Thus, $\overline{M_i}$ has at least $i$ maximal cliques. As $(\overline{M_i}\land v)$ has a universal vertex $v$, each one of these maximal cliques in $\overline{M_i}$ compose a maximal clique with $v$ in $(\overline{M_i}\land v)$, then these new maximal cliques have vertex $v$ in common. Thus, to tessellate these $i$ maximal cliques we need at least $i$ tessellations.
+\end{proof}
+
+\begin{teo}\label{teo:MycLocA}
+Let $M_i$ be a Mycielsky graph and $\overline{M_i}$ its complement graph. Then $loc_\alpha(\overline{M_i}\land v) = 2$, for $i\geq 2$.
+\end{teo}
+\begin{proof}
+Since every Mycielsky graph has no triangles, we know that the largest clique in a Mycielsky graph $M_i$ has size two. Thus, in
+$\overline{M_i}$, the largest stable set also has size two. We have that vertex $v$ is universal in $(\overline{M_i}\land v)$, then the maximum induced star in $(\overline{M_i}\land v)$ has size two, leading us to 
+$loc_\alpha(\overline{M_i}\land v) = 2$.  
+\end{proof}
+
+\subsection{Tessellation of Universal graphs and $\alpha(G)$}
+\label{sub:23}
+%falar dos bounds adaptados que é alpha e coloring do complemento
+
+A $S_2(G)$ graph is obtained from a graph $G$ by subdividing the edges of $G$ two times, i.e., we replace each edge of $G$ by a path of three edges with the same endpoint vertices.
+
+\begin{teo}
+[Poljak~\cite{ArPoljak}] 
+If $G=(V, E)$ be a graph, then $\chi(\overline{L(S_2(G))}) = |V(G)| + |E(G)| - \alpha(G)$.
+\label{teo:23aa}
+\end{teo}
+
+\begin{teo}
+If $G=(V, E)$ is a graph, then $T(L(S_2(G))\land \{v\})=|V(G)| + |E(G)| - \alpha(G)$.
+\label{teo:23a}
+\end{teo}
+\begin{proof}
+By Lemma~\ref{}, we know that $T(L(S_2(G)) \land \{v\})\geq \chi(\overline{L(S_2(G))})$.
+We now show that $T(L(S_2(G))\land\{v\})\leq \chi(\overline{L(S_2(G))})$.
+Let $G$ be a graph with $|E(G)| \geq 4$.
+
+Consider a partial tessellation cover of $L(S_2(G))$ where we cover the cliques guided by a coloring of the complement graph. 
+Therefore, we use $\chi(\overline{L(S_2(G))})$ tessellations, and each clique of $L(S_2(G))$ related to a color class of $\overline{L(S_2(G))}$ will be covered by a different tessellation.
+By Theorem~\ref{teo:23aa}, we know that $\chi(\overline{L(S_2(G))}) = |V(G)| + |E(G)| - \alpha(G)$.
+
+Note that because $L(S_2(G))$ is the line graph of a $S_2(G)$ graph, every vertex of $L(S_2(G))$ has a maximum clique of size two incident to it and another maximum clique incident to it with any size.
+
+Consider now a maximum clique $K_a$ of size at least three which are not completely covered yet.
+The partial tessellation cover cannot have two cliques completely inside $K_a$ (otherwise one could merge both and obtain a coloring of the complement graph with less than its chromatic number).
+Therefore, the edges of $K_a$ can only be partial covered at the moment with one clique, and 
+the remaining cliques covering the vertices of $K_a$ are the maximal cliques of size two which are incident to these vertices.
+
+If $K_a$ has only maximal cliques of size two incident to its vertices, each edge of $K_a$ has at most two forbidden tessellations to it (the ones given to these maximal cliques of size two in the partial tessellation cover that shares endpoints with the endpoints of the edge).
+As $|E(G)| \geq 4$ and $\alpha(G) \leq |V(G)|$, $|V(G)| + |E(G)| - \alpha(G) \geq 4$ and there is at least one available tessellation for each edge of $K_a$.
+We claim that these available tessellations for each edge are enough to extend a valid tessellation of $K_a$ on this partial tessellation cover.
+Note that each edge has an available tessellation, so one may choose arbitrarily a tessellation for each edge.
+Moreover, the set of vertices of any collection of edges on a same tessellation with an available tessellation do not have these tessellations incident to it.
+Therefore, one may choose the complete subgraph induced by the vertices of the edges with the respective tessellation to be included in this tessellation.
+
+Otherwise, $K_a$ has an induced complete subgraph $K_b$ used in the partial tessellation cover.
+All the other vertices of $K_a$ must be covered by maximal cliques of size two outside $K_a$. One may modify the partial tessellation cover assign the tessellation of $K_b$ into $K_a$ and remove the vertices of $K_a$ from cliques of size two on the partial tessellation cover, i.e., now they are cliques of size one and $K_a$ is entirely covered by a single tessellation.
+
+Now, the remaining not covered edges of $L(S_2(G))$ on the partial tessellation cover are maximal cliques of size two.
+Moreover, if an edge is not covered and it is incident to a maximal clique of size more than two, we need that this clique be entirely covered by a single tessellation.
+Therefore, the maximum number of forbidden tessellations to these remaining edges are three.
+As we have $|V(G)| + |E(G)| - \alpha(G) \geq 4$ available tessellations, there are always one available tessellation for each of these edges.
+
+Finally, the edges incident to $v$ can be covered by the tessellations used to cover the vertices of $L(S_2(G))$. 
+\end{proof}
+
+
+\begin{figure}
+\centering
+     \includegraphics[scale=0.4]{lagos2019-2b.pdf}
+     \caption{ Explicar a figura e colocar um rotulo \label{fig:universal3}}
+\end{figure}
+
+%talvez reescrever trocando alpha(G) por independent set of size k, para evitar o problema com np-dificil e np-completo.
+\begin{teo}
+\textsc{$t$-tessellability} is $\mathcal{NP}$-complete for universal graphs. 
+\label{teo:23b}
+\end{teo}
+\begin{proof}
+Let $G$ be an instance graph of the decision version of \textsc{maximum independent set} with $|E(G)| \geq 4$. 
+We know that deciding if $\alpha(G) = k$ is $\mathcal{NP}$-complete~\cite{ArGarey}.
+
+Consider the graph $L(S_2(G)) \land \{v\}$.
+By Theorem~\ref{teo:23a},  $T(L(S_2(G)) \land \{v\}) = |E(G)| + |V(G)| - \alpha(G)$.
+
+Therefore, decide if $\alpha(G) = k$ is equivalent to decide if $T(L(S_2(G)) \land \{v\}) = |E(G)| + ||V(G)| - \alpha(G)$.
+I.e., it is equivalent to decide if $\alpha(G) = k$ and decide if the tessellation cover number of $H$, the line graph of the graph obtained by replacing each edge of $G$ by a path of size three and by adding an universal vertex to it, is equal to $|E(G)| + |V(G)| - k$.
+Hence, \textsc{$t$-tessellability} is $\mathcal{NP}$-complete for universal graphs.
+\end{proof}
+
+\begin{rema}
+\label{rem:univ}
+\emph{
+Clearly, a graph with a universal vertex have diameter two.
+Moreover, we know that graphs with universal vertex are also dually chordal~\cite{ArCitar}.
+Given a graph $G$, we can create a split graph $H$ where the clique of $H$ is the edges of $G$, the stable set is its vertices, and the other edges of $H$ are between a vertex $v$ of the stable set and an edge $uv$ of the clique if the edge $uv \in E(G)$. 
+I.e., if two vertices are adjacent in $G$, then the respective vertices they represent in the stable set have distance two in $H$ and if they are not adjacent in $G$, they have distance three. 
+Additionally, all vertices of the stable set have distance two with vertices of the clique.
+Therefore, the square graph of $H$ is the graph $G$ adding $|E(G)|$ universal vertices.
+By Lemma~\ref{lema:truetwin}, we know that add true twin vertices to a graph $G$ does not modify its tessellation cover number.
+Therefore, we may consider only the graph $G$ with one universal vertex $v$.
+The tessellation cover number of $G \land \{v\}$ is equal to the one of $H$.
+}
+\end{rema}
+
+The following Corollary follows directly from Theorem~\ref{teo:23b} and Remark~\ref{rem:univ}.
+
+\begin{cor}
+\textsc{$t$-tessellability} is $\mathcal{NP}$-complete for dually chordal graphs, square of split graphs, and diameter two graphs.
+\end{cor}
+
+
+%teorema de pode afastar o quanto quiser.(isso é no outro não é nesse)
+
+\begin{teo}
+\label{teo:afastarnpc}
+For any integer $c$ polynomialy bounded by the size of $|V(G)|$, there is a class of graphs for which $\textsc{$t$-tessellability}$ is $\mathcal{NP}$-complete and $T(G) \geq loc_\alpha(G)+c$. 
+%maior em vez igual? ou a partir de um certo valor, pensar
+\end{teo}
+\begin{proof}
+By Lemma~\ref{BOUNDlocalpha}, $T(G) \geq loc_\alpha(G)$.
+
+Consider a graph $G$ and $L(S_2(G))\land\{v\}$, as described in Theorem~\ref{teo:23b}.
+
+Note that $loc_\alpha(L(S_2(G))\land\{v\}) = \alpha(L(S_2(G))) = \mu(S_2(G))$.
+We claim that $\mu(S_2(G)) = |E(G)|+\mu(G)$.
+There is three edges in $S_2(G)$ between two adjacent vertices of $G$. In the maximum matching, we need to select at least one of them, as if we do not pick any of these three edges, we could include the middle edge to the maximum matching, a contradiction.
+Moreover, if there is only one edge and it is not a middle edge, we obtain another maximum matching by exchanging this edge for the middle edge.
+Clearly, we cannot chose three edges and the case we chose two edges, neither of them are the middle edge.
+Note that the case we can chose two edges forces that both of them are incident to vertices of $S_2(G)$ related to vertices of $V(G)$.
+Therefore, one may consider the maximum number of such selection of two edges in $S_2(G)$  as a maximum matching of $G$.
+I.e., for each edge in a maximum matching $\mu(G)$ of $G$ we have two edges in the maximum matching in $S_2(G)$ and, for each other edge of $G$, we have one edge in the maximum matching in $S_2(G)$.
+Hence, $\mu(S_2(G)) = 2\mu(G) + |E(G)| - \mu(G) = |E(G)| + \mu(G)$.
+
+By Theorem~\ref{teo:23a}, we know that $T(G) = |E(G)| + |V(G)| - \alpha(G)$.
+The addition of universal vertices in $G$ does not modify $\alpha(G)$.
+Each of addition of these universal vertices may add one unity to $\mu(G)$ until it gets all vertices of $G$.
+After that, we add one unity to $\mu(G)$ for each addition of two universal vertices.
+In that case, we start to increase the difference between $T(G) = |E(G)|+|V(G)| - \alpha(G)$ and $loc_alpha(G) = |E(G)| + \mu(G)$ as for each two universal vertices we add to $G$, we increase $T(G)$ in two units and $loc_\alpha(G)$ in one unity.
+
+Therefore, we can increase this difference as much as we want.
+And, as long as the addition of these universal vertices are polynomially bounded by the size of the instance graph $G$, it holds the same polynomial transformation of Theorem~\ref{teo:23b} from maximum independent set of $G'$, the graph obtained by $G$ by the addition of the universal vertex, to the tessellation cover number $T(G)$ of $L(S_2(G'))\land\{v\}$.
+\end{proof}
+
+
+
+\subsection{Tessellation of universal graphs and $\chi(G^c)$}
+\label{sub:24}
+
+
+\begin{lema}
+\label{lema:chiGc}
+A graph $G \land \{v\}$ with $T(G\land\{v\}) \geq 2\Delta(G)+1$ has $T(G\land\{v\}) = \chi(G^c)$.
+\end{lema}
+\begin{proof}
+Consider a graph $G\land\{v\}$ with a universal vertex $v$.
+By Lemma~\ref{LIMITEINF CHI}, $T(G\land\{v\}) \geq \chi(G^c)$.
+
+Note that if $T(G\land\{v\}) \geq 2\Delta(G)+1$, then there is a tessellation cover of $G\land\{v\}$ with $\chi(G^c)$ tessellations as follows.
+
+Use the $\chi(G^c)$-coloring of $G^c$ as a guide to define a partial tessellation of the edges of $G$ with $\chi(G^c)$ tessellations in such way that each color class of $G^c$ will be a clique of $G$ entirely covered by the tessellation related to its color. 
+Moreover, we cover the edges $vw$ with the tessellation related to the color class $w$ belongs in $G^c$.
+
+Now, the only edges not covered in $G\land\{v\}$ are the ones between vertices of $G$ which are not in a color class in the coloring of $G^c$.
+However, as $T(G) \geq 2\Delta(G)+1$, one may greedly assign  tessellations of cliques of size two to these remaining edges, as the maximum number of forbidden tessellations to an edge $xy$ will be $2\Delta(G)-2$ because of the other edges of $G$ incident to $x$ and $y$ plus $2$ tessellations from the edges $vx$ and $vy$.
+\end{proof}
+
+\begin{lema}
+\label{cor:chigc}
+A graph $G \land \{v\}$ with $\alpha(G\land\{v\}) \geq 2\Delta(G)+1$ has $T(G\land\{v\}) =  \chi(G^c)$. Moreover, if $H$ is obtained from $G\land\{v\}$ by adding $2\Delta(G)+1$ pedant vertices to $v$, then $T(G) = \chi(G^c) + 2\Delta(G)+1$.
+\end{lema}
+\begin{proof}
+Note that if $\alpha(G\land\{v\}) \geq 2\Delta(G)+1$, then $T(G\land\{v\}) =  \chi(G^c) \geq \omega(G^c) = \alpha(G \land \{v\}) \geq 2\Delta(G)+1$.
+Therefore, if $\alpha(G\land\{v\}) \geq 2\Delta(G)+1$, by Lemma~\ref{lema:chiGc}, $T(G\land\{v\}) = \chi(G^c)$.
+
+Moreover, one may obtain a graph $H$ from $G \land \{v\}$ by adding $2\Delta(G)+1$ pendant vertices to $v$. 
+Now, as each pendant vertex added to $v$ in $H$ does not modify $\Delta(G)$, we know that $\alpha(H)\geq 2\Delta(G)+1$.
+Moreover, each of those pendant vertex is a universal vertex in $G^c$, increasing the chromatic number of $G^c$ in one unity.
+Therefore, $T(H) = \chi(H^c) = \chi(G^c) + 2\Delta(G)+1$.
+\end{proof}
+
+
+
+%colocar isso como um remark no apendice
+%Kr\'al et al.~\cite{ArKral} proved that clique cover is $\mathcal{NP}$-complete when restricted to $\{K_4, K_4^-, C_4, c_5\}$-free planar graphs.
+%They made a polynomial transformation from a specific \textsc{$3$-sat} variation, where each clause has two or three variables and each variable appears two times negative and one time positive. 
+%Then, they construct a graph $G$ as follows: 
+%For each clause of the instance of \textsc{$3$-SAT}, we add a cycle of size 7, where we pick a stable set of size three relating it to the three literals of that clause.
+%For each variable of the instance of \textsc{$3$-SAT} we add a pawn graph (a triangle with a pendant vertex) where the central vertex of the pawn is related to the variable, the two other vertices of the triangle are related to the negative form of the literal and the other extreme to the positive form.
+%Now, we identify each literal vertex in the pawn with their respective vertices in the clauses.
+%Them they proved that 
+
+
+
+\begin{rema}
+\label{rem:kral}
+\emph{
+Kr\'al et al.~\cite{ArKral} proved that \textsc{$k$-pic} for $\{K_4, K_4^-, C_4, c_5\}$-free planar graphs is $\mathcal{NP}$-complete.
+Additionally, the graph they used have degree at most four.
+And the value of $k$ is given by $|U|+3|C|$, where $I=(U, C)$ is the instance of a special version of \textsc{$3$-SAT} problem.
+Therefore, when $|U|+3|C| \geq 2\Delta+1= 9$, by Lemma~\ref{lema:chiGc}, $T(G)$ of graphs $G$ obtained from the graphs on this class by the addition of a universal vertex has $T(G) = \chi(G^c)$, where $\chi(G^c) = \theta(G)$.
+Particularly, their graphs have $loc_\alpha(G)=\alpha(G)=|U|+3|C|$.
+I.e., $T(G) = loc_\alpha(G) = |U|+3|C|$ if and only if the instance $I$ has a truth assignment.}
+
+\emph{Cerioli et al.~\cite{ArCerioli} proved that \textsc{$k$-pic} is $\mathcal{NP}$-complete for cubic planar graph, where $k \geq 7 \geq 2\Delta+1$.}
+
+\end{rema}
+
+The next corollary follows directly from Remark~\ref{rem:kral}.
+
+\begin{cor}
+\textsc{$t$-tessellability} and \textsc{ptr} are $\mathcal{NP}$-complete for the graph class obtained from $\{K_4, K_4^-, C_4, C_5\}$-free planar graphs with maximum degree four by the addition of a universal vertex, whereas \textsc{$t$-tessellability} is $\mathcal{NP}$-complete for the graph class obtained from cubic planar graphs by the addition of a universal vertex.
+\end{cor}
+
+
+
+
+
+\section{Perfect tessellable graphs}\label{sec:npc}
+\subsection{The two parameters: $T(G)$ and $loc_\alpha(G)$}
+\label{sub:31}
+%falar do mycielski que se afasta
+%falar da pergunta quando são iguais
+%falar da relação com grafos perfeitos no complemento
+%falar quando fixa um fixa outro, 2 fixos, quando são diferentes (linha), 
+
+\subsection{Relating \textsc{ptr} with known hardness results of \textsc{$t$-tessellability}}
+\label{sub:32}
+
+In Section~\ref{sec:intropre} we listed the known results on the computational complexity of \textsc{$t$-tessellability}.
+
+Surprisingly, all the hardness results given in Abreu et al.~\cite{ArLatin} for \textsc{$t$-tessellability} have $t$ equal to $loc_\alpha$.
+Therefore, all these hardness results also holds for \textsc{ptr} on the same graph classes.
+Moreover, the linear-time algorithm to recognize $2$-tessellable graphs also holds for $\textsc{ptr}$ of line graphs.
+This happens because $2$-tessellable graphs are line graphs of a bipartite multigraph and line graphs are $K_{1,3}$-free (i.e., $loc_\alpha=2$ unless it is a clique).
+Therefore, recognize $2$-tessellable graphs are equivalent to decide if a line graph $G$ has $T(G)=2=loc_\alpha(G)$ (i.e., $\textsc{ptr}$ of line graphs).
+
+The only known $\mathcal{NP}$-complete result for \textsc{$t$-tessellability} with $t \neq loc_\alpha$ was given by Portugal et al.~\cite{ArCNMAC} for line graph of triangle free graphs (where $t = 3$ and $loc_\alpha=2$).
+(In Section~\ref{sub:23} we give a graph class for which $t$ may polynomially differ as much as we want from $loc_\alpha$ and \textsc{$t$-tessellability} remains $\mathcal{NP}$-complete).
+%não sei se esse comentário deveria vir aqui ou na sessão acima, talvez deixar na sessão acima?
+%pode ficar aqui sim
+
+
+
+\begin{table}[!h]
+\centering
+\caption{Relating \textsc{ptr} with the already known computational complexities of the $t$-TESSELLABILITY for graph classes}\label{tab:ComplexResults}
+
+\begin{tabular}{ c|c|c }
+Graph class & \textsc{$t$-tessellability} & \textsc{ptr}\\ \hline
+
+Bipartite & $\mathcal{P}$ (Yes if $t=\Delta) $ & Always Yes\\ \hline
+
+triangle-free & $\mathcal{NP}$-c ($t=\Delta) $ & $\mathcal{NP}$-c ($loc_\alpha=\Delta$ )\\ \hline
+
+unichord-free & $\mathcal{NP}$-c ($t=\Delta) $ & $\mathcal{NP}$-c ($loc_\alpha =\Delta$)\\ \hline
+
+Planar $\Delta \geq 6$  & $\mathcal{NP}$-c ($t=3) $ & $\mathcal{NP}$-c ($loc_\alpha=3$)\\ \hline
+
+biplanar & $\mathcal{NP}$-c (fixed $t\geq 3) $ & $\mathcal{NP}$-c (fixed $loc_\alpha \geq 3$)\\ \hline
+
+$(2,1)$-chordal & $\mathcal{NP}$-c (fixed $t\geq 4) $ & $\mathcal{NP}$-c (fixed $loc_\alpha \geq 4$)\\ \hline
+
+$(1,2)$ & $\mathcal{NP}$-c (fixed $t\geq 4) $ & $\mathcal{NP}$-c (fixed $loc_\alpha \geq 4$)\\ \hline
+
+diamond-free graphs with  & $\mathcal{NP}$-c ($t=3) $ & $\mathcal{NP}$-c ($loc_\alpha=3$)\\ 
+diameter at most five &  &  \\ \hline
+
+diamond-free $K$-perfect graphs  & $\mathcal{P}$ (Yes if $t=\chi(K(G)$) & $\mathcal{P}$ (Yes if $loc_\alpha=\chi(K(G)$)\\\hline 
+
+threshold & $\mathcal{P}$  & Always Yes\\ \hline
+
+quasi-threshold & $\mathcal{P}$  & Always Yes\\ \hline
+
+line graph & $\mathcal{NP}$-c ($t=3$)  & $\mathcal{P}$ (Yes if it is $2$-tessellable)\\ \hline
+
+\end{tabular}
+\end{table}
+
+
+
+
+
+%falar dos casos que sempre são bipartodo, threshold, K-clique perfect quase-trehshold
+%falar dos casos que decidir é np-completo sem triangulo, planar, chordal(2,1) (1,2) para qq t, biplanar, without diamond and dimeter max 5. falar que foi sem querer todos fixados o localpha nesse artigo e que no planar eh diferente
+%entao pensamos se era posisivel mostrar np-c fixando o outro parametro que vem na sessao a aseguir
+%falar do linha que é perf tess sse é 2-tess
+%e falar da prova np-c com diferente localpah e tess do cnmac
+
+\subsection{Graphs with fixed tessellation cover number}
+\label{sub:33}
+
+The graph $H=G \times K_c$ is obtained from a graph $G$ by making $c$ disjoint copies of $G$ in $H$ and adding edges between pair of vertices of each of these copies of $G$ that represent the same vertex of $G$. Particularly, $G \times K_2$ is the prism graph of $G$.
+
+We now proof that \textsc{ptr} is $\mathcal{NP}$-complete on a graph class with the tessellation cover number fixed in a fraction of the value of its number of vertices.
+Note that, as previously described in Section~\ref{sub:31}, if the value of tessellation cover number is upper bounded by a constant, then we can obtain $loc_\alpha$ in polynomial time.
+
+
+\begin{teo}
+\textsc{ptr} is $\mathcal{NP}$-complete in a graph with tessellation cover number fixed in a fraction of the value of its number of vertices.
+\label{teo:npcTGfixed}
+\end{teo}
+\begin{proof}
+
+Let $G$ be an instance of the well-known $\mathcal{NP}$-complete problem \textsc{$k$-colorability} without a universal vertex (if $G$ has a universal vertex, you can remove it and consider it an instance of $(k-1)$-coloring)~\cite{ArGarey}.
+
+Consider the graph $H=((G \times K_k) \land \{v\}) \cup G'$, where $G'$ is the graph obtained by making a join of a vertex $u$ with a $C_5$ and by adding $|V(G)|-3$ pendant vertices to $u$.
+
+By Lemma~\ref{LIMITECHI}, we know that $T(G') \geq |V(G)|$.
+Moreover, one may obtain a tessellation cover of $G'$ with $|V(G)|$ tessellations, as we need 3 tessellations to cover the edges of the join of $u$ and the $C_5$, and another $|V(G)|-3$ tessellations to cover the remaining edges of the pendant vertices.
+Thus, $T(G') = |V(G)|$
+Moreover,  as $\alpha(C_5)=2$, $loc_\alpha(G') = |V(G)|-1$.
+
+Note that one may obtain a tessellation cover of $(G \times K_k) \land \{v\})$ with $|V(G)|$ tessellations as follows.
+Consider an optimum edge-coloring of the graph $G \land \{x\}$.
+As $G$ has no universal vertex, then $x$ is the only universal vertex of this graph and we know that this graph has $\chi'(G \land \{x\}) = \Delta(G \land \{x\}) = |V(G)|$~\cite{ArClasse1}.
+Now, when we remove $x$ and the edges incident to it from this graph, this is a tessellation cover of $G$ with $|V(G)|$ tessellations where each vertex miss a different tessellation.
+We now use this same tessellation cover to each copy of $G$ in $(G \times K_k)$.
+Next, we entirely cover each clique between vertices which represent the same vertex of $G$ with the missing tessellation for these vertices.
+Finally, the edges incident to $v$ are covered by the tessellation given by these previous cliques displayed between vertices of the copies of $G$. As each vertex of $G$ belong to one of those $|V(G)|$ cliques, all edges of $v$ are covered.
+Therefore, $T((G \times K_k) \land \{v\}) \leq |V(G)|$.
+
+Until now, we have $T(H) = \max\{T((G \times K_k) \land \{v\}), T(G')\} = |V(G)|$ and $loc_\alpha(H) = \max\{loc_\alpha((G \times K_k) \land \{v\}), loc_\alpha(G')\}$.
+As $loc_\alpha(G') = |V(G)|-1$, $H$ is perfect tessellable if and only $loc_\alpha((G \times K_k) \land \{v\}) = |V(G)|$.
+
+Chv\'atal~\cite{ArChvtal} proved that a graph $G$ has a $k$-coloring if and only if $\alpha(G \times K_k) = |V(G)|$.
+Since $loc_\alpha(H) = \alpha(G \times K_k)$, decide if $H$ is perfect tessellable is equivalent to decide if $G$ is $k$-colorable.
+\end{proof}
+
+
+
+
+\begin{figure}
+\centering
+     \includegraphics[scale=0.2]{lagos20193.pdf}
+     \caption{ Explicar a figura e colocar um rotulo \label{fig:fixedtg}}
+\end{figure}
+
+
+%corolario do uniao splits e dually chordal e universal e diametro 2
+
+The next corollary follows directly from Theorem~\ref{teo:npcTGfixed} and Remark~\ref{rem:univ}.
+
+\begin{cor}
+\label{cor:trfixed}
+\textsc{$t$-tessellability} and \textsc{ptr} are $\mathcal{NP}$-complete for the union of two universal graphs, the union of two diameter two graphs, the union of two square of split graphs, and the union of two dually chordal graphs.
+\end{cor}
+
+
+
+
+\subsection{Thorny and prism graphs}
+\label{sub:34}
+A \textit{thorny graph} is a graph obtained from a graph $G$ by adding pendant vertices to it.
+Hereinafter we only consider $1$-thorny graphs, which are related to a thorny graph of a graph $G$ where we add exactly one pendant for each vertex of $G$.
+A \textit{prism graph} $H$ is obtained from a graph $G$ by making two copies $G_1$ and $G_2$ of $G$ in $H$ and by adding edges between pair of vertex of $H$ related to the same vertex $G$.
+
+Portugal et. al~\cite{CNMAC} proved that \textsc{$3$-tessellability} of line graph of triangle free graphs is $\mathcal{NP}$-complete. 
+They also showed the following characterization:
+Let $G$ be a line graph of a triangle free graph $G$, then $L(G)$ is $3$-tessellable if and only if $\chi(K(G)) \leq 4$.
+
+
+\begin{rema}
+\emph{
+As line graphs are $K_{1,3}$-free, we have that the graphs in this class have $loc_{\alpha}\leq 2$. 
+Therefore, this is the first graph class for which there is a proof that \textsc{$t$-tessellability} is $\mathcal{NP}$-complete when $t \neq loc_\alpha$.
+}
+\end{rema}
+
+
+Now, we show that \textsc{$3$-tessellability} of $1$-thorny graphs (or prism graphs) is $\mathcal{NP}$-complete. 
+As a consequence, decide if the graphs in these classes are perfect tessellable is also $\mathcal{NP}$-complete.
+
+%desconsiderar o caso que o grafo não for completo pq ai nao tem conexao com 2 cliques... pensar isso no inicio ignorar os 1-tesselláveis em algum lugar e talvez os 2-tesselláveis.
+\begin{lema}
+Let $L(G)$ be the line graph of a triangle free graph $G$ and $H$ be the $1$-thorny graph obtained from $L(G)$.
+$H$ is 3-tessellable if and only if $\chi(K(L(G))) \leq 3$.
+\label{lema:carthorny}
+\end{lema}
+\begin{proof}
+%By Theorem~\ref{teo:linhacar}, we know that $L(G)$ is $3$-tessellable if and only if $chi(K(L(G))) \leq 4$.
+One may verify that any diamond induced subgraph of $L(G)$ requires that $G$ has a triangle induced subgraph.
+Therefore, as $G$ is triangle-free, $L(G)$ is diamond-free
+and any two maximal cliques intersect in only one vertex.
+
+Consider a $3$-tessellation of $H$.
+As $H$ is the $1$-thorny graph of a line graph of a triangle-free graph, there is a pendant vertex in any vertex $v$ of the intersection of two maximal cliques of $L(G)$.
+In $H$,  the edge of this pendant vertex must be in one tessellation, and it remains only two tessellations to cover the two maximal cliques incident to $v$.
+Therefore, these two maximal cliques must be entirely covered by one tessellation each.
+One may use the tessellations of the maximal cliques of $L(G)$ in $H$ as a guideline to obtain a $3$-coloring of $K(L(G))$, as each maximal clique in $H$ are completely covered by one tessellation, one may relate it to a vertex in a color class of $K(G)$. 
+As $H$ has a $3$-tessellation, $K(L(G))$ has a $3$-coloring.
+
+Consider a $3$-coloring of $K(L(G))$.
+One may related each color class of $K(L(G))$ to a tessellation of $L(G)$, where each maximal clique of $L(G)$ are entirely covered by a tessellation related to the color class of its vertex in $K(G)$.
+One may copy this tessellation of $L(G)$ to the edges of $H$ as a partial tessellation.
+Now, we only need to cover the edges of the pendant vertex.
+Nevertheless, as each pendant vertex has only two forbidden tessellations, and there is three available tessellations, there is always one free tessellation to be used by these edges of pendant vertices.
+Therefore, $H$ is $3$-tessellable.
+\end{proof}
+
+
+%F. Maﬀray and M. Preissmann. On the N P-completeness of the k-colorability problemfor triangle-free graphs, Discrete Mathematics 162, p. 313, 1996.
+%talvez citar o artigo certo senão usar o CNMAC aqui, pensar
+
+
+\begin{figure}
+\centering
+     \includegraphics[scale=0.3]{lagos20194.pdf}
+     \caption{ Explicar a figura e colocar um rotulo \label{fig:prism}}
+\end{figure}
+
+
+\begin{teo}
+\textsc{$3$-tessellability} and $\textsc{ptr}$ are $\mathcal{NP}$-complete for $1$-thorny graphs and prism graphs.
+\label{teo:npcthornyprism}
+\end{teo}
+\begin{proof}
+
+By Lemma~\ref{lema:carthorny}, the $1$-thorny graph $H$ (obtained from a line graph of a triangle-free graph $G$ by adding one pendant vertex to each of its vertex) is $3$-tessellable if and only if $\chi(K(L(G)))\leq 3$.
+
+Maffray and Preissmann~\cite{ArMaffray} proved that decide if $\chi(G) \leq 3$ for triangle-free graphs with $\Delta \leq 4$ is $\mathcal{NP}$-complete.
+
+We know that if $G$ is a triangle-free graph, $K(L(G)) = G'$, where $G'$ is obtained from $G$ by removing its pendant vertices cf.~\cite{CNMAC}.
+Note that, unless we have the graph $G=K_1$, the addition of pendant vertices to a graph do not modify its chromatic number $\chi(G)$.
+Therefore, $\chi(K(L(G))) = \chi(G)$.
+
+Decide if a $1$-thorny graph $H$ is $3$-tessellable is equal to decide if $\chi(K(L(G))) = \chi(G) \leq 3$, where $G$ is a triangle-free graph, which we know it is $\mathcal{NP}$-complete~\cite{ArMaffray}.
+Thus, \textsc{$3$-tessellability} of thorny graphs is $\mathcal{NP}$-complete.
+
+Let $L(G)$ be a line graph of a triangle-free graph $G$, $H$ be its $1$-thorny graph, and $H'$ be its prism graph.
+
+If $H'$ is $3$-tessellable, so it is $H$, as one may maintain the same tessellation of $H'$ in the edges of $H$.
+Conversely, if $H$ is $3$-tessellable, so it is $H'$, as one may copy the same tessellation of the edges of $L(G)$ in $H$ to the respective edges of the prism graph,
+i.e., decide if a prism graph $H'$ is $3$-tessellable is equal to decide if the $1$-thorny graph $H$ is $3$-tessellable.
+Therefore, \textsc{$3$-tessellability} of prism graphs is $\mathcal{NP}$-complete.
+
+As line graphs are $K_{1,3}$-free, unless $L(G)$ is a complete graph, $loc_\alpha(L(G))=2$.
+Hence, $loc_\alpha(H)= loc_\alpha(G)+1 = 3$ and  $loc_\alpha(H')= loc_\alpha(H)$.
+Therefore, decide if $H$ (or $H'$) is $3$-tessellable is equivalent to decide if $H$ (or $H'$) is perfect tessellable, i.e., \textsc{ptr} is $\mathcal{NP}$-complete for thorny graphs and prism graphs.
+\end{proof}
+
+\subsection{Operations on graphs}
+\label{sub:35}
+%falar qaue força ficar iguala c oloraçaõ de aresta então é equivalente a decidir se é igual a localpha pq nesse caso é delta o localpha fixo igual a coloração aresta anterior
+
+%\section{Operations}\label{sec:operations}
+%Adicionar as operações que não foram colocadas no LATIN que forçam a tesselação ser igual a coloração de aresta, nesse caso, decidir se é perf tess.
+%talvez colocar aquel aprova que para cubico pode retirar os triangulos e dessa forma fica igual decidir 3-tess de cubico e se é perf tess, mesmo se tem triangulo, pode tirar e é igual a esse grafo resultante retirado.
+
+%citar todos os resultados do artigo do LATIN
+%falar que todos fixando localpha, agora fixamos T(G) uma inversão
+
+%falar as classes que isso inclui, que não sabemos T(G) mas sabemos que decidir se é perf tess é NP-c
+
+%falar de NP-c de perf tess no thorny/grafo prisma e decidir se é 3-tess tb.
+
+
+
+\section{Conclusions}\label{sec:conc}
+
+
+%\begin{thebibliography}{0}\label{bibliography}
+
+%\end{thebibliography}
+\bibliographystyle{entcs}
+\bibliography{refs}
+
+\end{document}
